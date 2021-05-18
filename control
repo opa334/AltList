@@ -1,0 +1,9 @@
+Package: com.opa334.altlist
+Name: AltList
+Version: 1.0
+Architecture: iphoneos-arm
+Description: A modern AppList alternative
+Maintainer: opa334
+Author: opa334
+Section: System
+Tag: role::developer
