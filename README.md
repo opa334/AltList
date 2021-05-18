@@ -2,7 +2,16 @@
 A modern AppList alternative
 
 The main focus of this dependency is to be an easy to use and easy to customize framework to handle per app preferences.
-Unlike AppLists `ALApplicationList` class, AltList does not have a way to get installed applications yourself, as stock iOS classes like `LSApplicationWorkspace` and `LSApplicationProxy` can already do that. Communication to SpringBoard is not needed for this.
+Unlike AppLists `ALApplicationList` class, AltList does not have a way to get installed applications yourself, as stock iOS classes like [`LSApplicationWorkspace`](https://developer.limneos.net/?ios=13.1.3&framework=CoreServices.framework&header=LSApplicationWorkspace.h) and [`LSApplicationProxy`](https://developer.limneos.net/?ios=13.1.3&framework=CoreServices.framework&header=LSApplicationProxy.h) (MobileCoreService / CoreServices framework) can already do that. Communication to SpringBoard is not needed for this.
+
+Example uses:
+```objc
+// get LSApplicationProxy of all installed applications
+NSArray<LSApplicationProxy*>* allInstalledApplications = [[LSApplicationWorkspace defaultWorkspace] allInstalledApplications];
+
+// get LSApplicationProxy for one application
+LSApplicationProxy* appProxy = [LSApplicationProxy applicationProxyForIdentifier:@"com.yourapp.yourapp"];
+```
 
 ## Features
 * Uses `LSApplicationWorkspace`, not dependent on RocketBootstrap / SpringBoard injection
@@ -13,7 +22,11 @@ Unlike AppLists `ALApplicationList` class, AltList does not have a way to get in
 * Supports iOS 9 and up
 
 ## Installation
-_Coming soon_
+Run [install_to_theos.sh](install_to_theos.sh) and add it to the makefile of your project:
+```
+<YOUR_PROJECT>_EXTRA_FRAMEWORKS = AltList
+```
+Then you can import it using `#import <AltList/AltList.h>` or just use the classes below in your preferences plist.
 
 ## Documentation
 
