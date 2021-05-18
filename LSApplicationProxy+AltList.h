@@ -1,3 +1,5 @@
+#import <MobileCoreServices/LSApplicationProxy.h>
+
 @interface LSApplicationProxy (AltList)
 - (BOOL)atl_isSystemApplication;
 - (BOOL)atl_isUserApplication;

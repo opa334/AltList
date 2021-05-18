@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, ApplicationSectionType) {
 	SECTION_TYPE_ALL,

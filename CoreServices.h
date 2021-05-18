@@ -1,5 +1,7 @@
-@interface LSBundleProxy : NSObject
-@property (nonatomic,readonly) NSString* bundleIdentifier;
+#import <MobileCoreServices/LSApplicationProxy.h>
+#import <MobileCoreServices/LSApplicationWorkspace.h>
+
+@interface LSBundleProxy (Additions)
 @property (nonatomic,readonly) BOOL if_isSystem;
 @end
 
@@ -7,7 +9,7 @@
 @property (nonatomic,readonly) NSArray* appTags; // 'hidden'
 @end
 
-@interface LSApplicationProxy : LSBundleProxy
+@interface LSApplicationProxy (Additions)
 @property (nonatomic,readonly) NSString* localizedName;
 @property (nonatomic,readonly) NSString* applicationType; // (User/System)
 @property (nonatomic,readonly) NSArray* appTags; // 'hidden'
@@ -16,9 +18,7 @@
 - (NSData*)iconDataForVariant:(int)variant withOptions:(int)options;
 @end
 
-@interface LSApplicationWorkspace : NSObject
-+ (instancetype)defaultWorkspace;
-- (NSArray<LSApplicationProxy*>*)allInstalledApplications;
+@interface LSApplicationWorkspace (Additions)
 - (void)addObserver:(id)arg1;
 - (void)removeObserver:(id)arg1;
 @end
