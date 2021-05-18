@@ -41,7 +41,7 @@ If you want your cstom section name to be localized: The value you set will be p
 | ------------------ | ------                                         | -------- | ------------ |
 | `sectionType`      | String (All/System/User/Hidden/Visible/Custom) | Visible  | Type of the section, see above |
 | `sectionName`      | String                                         | @""      | For custom sections, name of the section |
-| `sectionPredicate` | String                                         | @""      | For custom sections, predicate to filter the applications |
+| `sectionPredicate` | String                                         | @""      | For custom sections, predicate to filter the applications, check out the [LSApplicationProxy headers](https://developer.limneos.net/?ios=13.1.3&framework=CoreServices.framework&header=LSApplicationProxy.h) for possible values to use |
 | `customClass`      | String                                         | @""      | Custom subclass of ATLApplicationSection to use, in case you want to implement even more custom behaviour |
 
 ### ATLApplicationListControllerBase
