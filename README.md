@@ -53,11 +53,11 @@ ATLApplicationListControllerBase is the base class inherited by the other classe
 | Key                            | Type    | Fallback            | Usage        |
 | ------------------------------ | ------- | ------------------- | ------------ |
 | `sections`                     | Array   | One Visible section | Array of dictionaries that represent the sections in which the applications are shown |
-| `useSearchBar`                 | Boolean | false               | Whether there should be a search bar at the top that allows to search for applications [(Example)](.images/1.PNG) |
-| `hideSearchBarWhileScrolling`  | Boolean | false               | When useSearchBar is enabled, whether the search bar should be hidden while scrolling (Always true on iOS 10 and below) [(Example)](.images/2.PNG) |
-| `showIdentifiersAsSubtitle`    | Boolean | false               | Whether the application identifiers should be shown in the subtitle (note: implemented by subclasses) [(Example)](.images/3.PNG) |
-| `alphabeticIndexingEnabled`    | Boolean | false               | When there is only one section, whether to section and index it by the starting letters [(Example)](.images/4.PNG) |
-| `hideAlphabeticSectionHeaders` | Boolean | false               | When alphabeticIndexingEnabled is true, whether to hide the sections that contain the first letters [(Example)](.images/5.PNG) |
+| `useSearchBar`                 | Boolean | false               | Whether there should be a search bar at the top that allows to search for applications [(Example)](.images/1.PNG?raw=true) |
+| `hideSearchBarWhileScrolling`  | Boolean | false               | When useSearchBar is enabled, whether the search bar should be hidden while scrolling (Always true on iOS 10 and below) [(Example)](.images/2.PNG?raw=true) |
+| `showIdentifiersAsSubtitle`    | Boolean | false               | Whether the application identifiers should be shown in the subtitle (note: implemented by subclasses) [(Example)](.images/3.PNG?raw=true) |
+| `alphabeticIndexingEnabled`    | Boolean | false               | When there is only one section, whether to section and index it by the starting letters [(Example)](.images/4.PNG?raw=true) |
+| `hideAlphabeticSectionHeaders` | Boolean | false               | When alphabeticIndexingEnabled is true, whether to hide the sections that contain the first letters [(Example)](.images/5.PNG?raw=true) |
 | `localizationBundlePath`       | String  | @""                 | Path to the bundle that should be used for localizing custom section titles |
 
 #### Methods (Can be subclassed for customization)
