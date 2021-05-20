@@ -13,8 +13,12 @@ AltList_CFLAGS = -fobjc-arc
 AltList_FRAMEWORKS = MobileCoreServices
 AltList_PRIVATE_FRAMEWORKS = Preferences
 
+after-AltList-stage::
+	@ln -s /Library/Frameworks/AltList.framework $(THEOS_STAGING_DIR)/Library/PreferenceBundles/AltList.bundle
+
 include $(THEOS_MAKE_PATH)/framework.mk
 ifeq ($(PACKAGE_BUILDNAME),debug)
-SUBPROJECTS += AltListTestBundle
+SUBPROJECTS += AltListTestPreferences
+SUBPROJECTS += AltListTestClasslessPreferences
 endif
 include $(THEOS_MAKE_PATH)/aggregate.mk

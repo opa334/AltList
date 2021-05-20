@@ -5,9 +5,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>AltListTestBundle</string>
+	<string>AltListTestPreferences</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.opa334.altlisttestbundle</string>
+	<string>com.opa334.altlisttestpreferences</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
