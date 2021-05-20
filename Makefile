@@ -6,7 +6,7 @@ include $(THEOS)/makefiles/common.mk
 
 FRAMEWORK_NAME = AltList
 
-AltList_FILES = $(wildcard *.m)
+AltList_FILES = AltList.x $(wildcard *.m)
 AltList_PUBLIC_HEADERS = ATLApplicationListControllerBase.h ATLApplicationListMultiSelectionController.h ATLApplicationListSelectionController.h ATLApplicationListSubcontroller.h ATLApplicationListSubcontrollerController.h ATLApplicationSection.h ATLApplicationSelectionCell.h ATLApplicationSubtitleCell.h ATLApplicationSubtitleSwitchCell.h LSApplicationProxy+AltList.h
 AltList_INSTALL_PATH = /Library/Frameworks
 AltList_CFLAGS = -fobjc-arc

@@ -132,7 +132,7 @@
 
 - (NSArray<NSSortDescriptor*>*)sortDescriptorsForApplications
 {
-	return @[[NSSortDescriptor sortDescriptorWithKey:@"localizedName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+	return @[[NSSortDescriptor sortDescriptorWithKey:@"atl_fastDisplayName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
 }
 
 - (void)populateFromAllApplications:(NSArray*)allApplications

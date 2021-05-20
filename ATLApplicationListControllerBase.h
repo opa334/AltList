@@ -16,6 +16,7 @@
 
 @interface ATLApplicationListControllerBase : PSListController <UISearchResultsUpdating, LSApplicationWorkspaceObserverProtocol>
 {
+	dispatch_queue_t _iconLoadQueue;
 	NSMutableArray* _allSpecifiers;
 	NSMutableDictionary* _specifiersByLetter;
 	NSArray<ATLApplicationSection*>* _applicationSections;
