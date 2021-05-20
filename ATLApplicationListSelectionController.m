@@ -7,6 +7,10 @@
 - (void)performSetterWithValue:(id)value;
 @end
 
+@interface PSTableCell()
+- (void)setChecked:(BOOL)checked;
+@end
+
 @implementation ATLApplicationListSelectionController
 
 - (void)loadPreferences
@@ -26,6 +30,7 @@
 			_selectedApplicationID = defaultValue;
 		}
 	}
+	NSLog(@"loaded _selectedApplicationID: %@", _selectedApplicationID);
 }
 
 - (PSSpecifier*)createSpecifierForApplicationProxy:(LSApplicationProxy*)applicationProxy
@@ -46,14 +51,8 @@
 
 	PSSpecifier* specifier = [tableCell specifier];
 	NSString* applicationID = [specifier propertyForKey:@"applicationIdentifier"];
-	if([_selectedApplicationID isEqualToString:applicationID])
-	{
-		tableCell.accessoryType = UITableViewCellAccessoryCheckmark;
-	}
-	else
-	{
-		tableCell.accessoryType = UITableViewCellAccessoryNone;
-	}
+
+	[tableCell setChecked:[_selectedApplicationID isEqualToString:applicationID]];
 
 	return tableCell;
 }
