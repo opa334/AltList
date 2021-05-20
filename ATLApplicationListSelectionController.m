@@ -30,7 +30,6 @@
 			_selectedApplicationID = defaultValue;
 		}
 	}
-	NSLog(@"loaded _selectedApplicationID: %@", _selectedApplicationID);
 }
 
 - (PSSpecifier*)createSpecifierForApplicationProxy:(LSApplicationProxy*)applicationProxy
