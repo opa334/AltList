@@ -12,6 +12,7 @@ AltList_INSTALL_PATH = /Library/Frameworks
 AltList_CFLAGS = -fobjc-arc
 AltList_FRAMEWORKS = MobileCoreServices
 AltList_PRIVATE_FRAMEWORKS = Preferences
+AltList_LOGOSFLAGS = -c generator=internal
 
 include $(THEOS_MAKE_PATH)/framework.mk
 ifeq ($(PACKAGE_BUILDNAME),debug)

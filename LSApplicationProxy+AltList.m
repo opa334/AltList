@@ -22,7 +22,7 @@
 		LSApplicationRecord* record = [self correspondingApplicationRecord];
 		appTags = record.appTags;
 	}
-	else
+	else if([self respondsToSelector:@selector(appTags)])
 	{
 		appTags = self.appTags;
 	}
