@@ -1,5 +1,6 @@
 #import "ATLApplicationListSubcontrollerController.h"
 #import "CoreServices.h"
+#import "LSApplicationProxy+AltList.h"
 
 @implementation ATLApplicationListSubcontrollerController
 
@@ -39,7 +40,7 @@
 	PSSpecifier* specifier = [super createSpecifierForApplicationProxy:applicationProxy];
 
 	specifier.detailControllerClass = self.subcontrollerClass;
-	[specifier setProperty:applicationProxy.bundleIdentifier forKey:@"key"];
+	[specifier setProperty:applicationProxy.atl_bundleIdentifier forKey:@"key"];
 	if(self.showIdentifiersAsSubtitle)
 	{
 		specifier.cellType = PSLinkCell;

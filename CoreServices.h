@@ -1,5 +1,4 @@
 @interface LSBundleProxy : NSObject
-@property (nonatomic,readonly) NSString* applicationIdentifier;
 @property (nonatomic,readonly) NSString* bundleIdentifier;
 @property (nonatomic,readonly) NSURL* bundleURL;
 @end
@@ -9,6 +8,7 @@
 @end
 
 @interface LSApplicationProxy : LSBundleProxy
+@property (nonatomic,readonly) NSString* applicationIdentifier;
 @property (nonatomic,readonly) NSString* localizedName;
 @property (nonatomic,readonly) NSString* applicationType; // (User/System)
 @property (nonatomic,readonly) NSArray* appTags; // 'hidden'

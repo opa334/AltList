@@ -283,13 +283,13 @@
 		cell:PSStaticTextCell
 		edit:nil];
 
-	[specifier setProperty:applicationProxy.bundleIdentifier forKey:@"applicationIdentifier"];
+	[specifier setProperty:applicationProxy.atl_bundleIdentifier forKey:@"applicationIdentifier"];
 
 	if(_iconLoadQueue)
 	{
 		UITableView* tableView = [self valueForKey:@"_table"];
 		dispatch_async(_iconLoadQueue, ^{
-			UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
+			UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.atl_bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[specifier setProperty:iconImage forKey:@"iconImage"];
 				if([self containsSpecifier:specifier])
@@ -307,7 +307,7 @@
 	}
 	else
 	{
-		UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
+		UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.atl_bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
 		[specifier setProperty:iconImage forKey:@"iconImage"];
 	}
 
