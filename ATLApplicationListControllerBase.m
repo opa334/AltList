@@ -52,6 +52,12 @@
 		{
 			self.hideSearchBarWhileScrolling = [hideSearchBarWhileScrollingNum boolValue];
 		}
+
+		NSNumber* includeIdentifiersInSearchNum = [specifier propertyForKey:@"includeIdentifiersInSearch"];
+		if(includeIdentifiersInSearchNum)
+		{
+			self.includeIdentifiersInSearch = [includeIdentifiersInSearchNum boolValue];
+		}
 	}
 
 	[self _setUpSearchBar];
@@ -282,16 +288,16 @@
 	if(_iconLoadQueue)
 	{
 		UITableView* tableView = [self valueForKey:@"_table"];
-		dispatch_async(_iconLoadQueue, ^(void){
+		dispatch_async(_iconLoadQueue, ^{
 			UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
-			dispatch_async(dispatch_get_main_queue(), ^(void){
+			dispatch_async(dispatch_get_main_queue(), ^{
 				[specifier setProperty:iconImage forKey:@"iconImage"];
 				if([self containsSpecifier:specifier])
 				{
 					NSIndexPath* specifierIndexPath = [self indexPathForIndex:[self indexOfSpecifier:specifier]];
 					if([[tableView indexPathsForVisibleRows] containsObject:specifierIndexPath])
 					{
-						dispatch_async(dispatch_get_main_queue(), ^(void){
+						dispatch_async(dispatch_get_main_queue(), ^{
 							[self reloadSpecifier:specifier];
 						});
 					}
@@ -321,7 +327,16 @@
 
 - (BOOL)shouldHideApplicationSpecifier:(PSSpecifier*)specifier
 {
-	return ![specifier.name localizedStandardContainsString:_searchKey];
+	BOOL nameMatch = [specifier.name rangeOfString:_searchKey options:NSCaseInsensitiveSearch range:NSMakeRange(0, [specifier.name length]) locale:[NSLocale currentLocale]].location != NSNotFound;
+
+	BOOL identifierMatch = NO;
+	if(self.includeIdentifiersInSearch)
+	{
+		NSString* applicationID = [specifier propertyForKey:@"applicationIdentifier"];
+		identifierMatch = [applicationID rangeOfString:_searchKey options:NSCaseInsensitiveSearch].location != NSNotFound;
+	}
+
+	return !identifierMatch && !nameMatch;
 }
 
 - (NSArray*)createSpecifiersForApplicationSection:(ATLApplicationSection*)section

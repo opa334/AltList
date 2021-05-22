@@ -68,7 +68,9 @@
 			<key>hideSearchBarWhileScrolling</key>
 			<true/>
 			<key>showIdentifiersAsSubtitle</key>
-			<false/>
+			<true/>
+			<key>includeIdentifiersInSearch</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>cell</key>

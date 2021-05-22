@@ -28,6 +28,7 @@
 
 @property (nonatomic) BOOL useSearchBar;
 @property (nonatomic) BOOL hideSearchBarWhileScrolling;
+@property (nonatomic) BOOL includeIdentifiersInSearch;
 @property (nonatomic) BOOL showIdentifiersAsSubtitle;
 @property (nonatomic) BOOL alphabeticIndexingEnabled;
 @property (nonatomic) BOOL hideAlphabeticSectionHeaders;

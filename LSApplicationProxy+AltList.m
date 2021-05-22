@@ -26,7 +26,7 @@
 	{
 		appTags = self.appTags;
 	}
-	return [appTags containsObject:@"hidden"] || [self.bundleIdentifier containsString:@"com.apple.webapp"];
+	return [appTags containsObject:@"hidden"] || ([self.bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
 }
 
 // Getting the display name is slow (up to 2ms) because it uses an IPC call
@@ -67,9 +67,9 @@
 {
 	NSString* localizedName = [self atl_fastDisplayName];//self.localizedName;
 
-	if([self.bundleIdentifier.lowercaseString containsString:@"carplay"])
+	if([self.bundleIdentifier rangeOfString:@"carplay" options:NSCaseInsensitiveSearch].location != NSNotFound)
 	{
-		if(![localizedName localizedCaseInsensitiveContainsString:@"carplay"])
+		if([localizedName rangeOfString:@"carplay" options:NSCaseInsensitiveSearch range:NSMakeRange(0, localizedName.length) locale:[NSLocale currentLocale]].location == NSNotFound)
 		{
 			return [localizedName stringByAppendingString:@" (CarPlay)"];
 		}
