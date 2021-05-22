@@ -1,7 +1,8 @@
 Package: com.opa334.altlist
 Name: AltList
-Version: 1.0
+Version: 1.0.1
 Architecture: iphoneos-arm
+Depends: firmware (>=9.0)
 Description: A modern AppList alternative
 Maintainer: opa334
 Author: opa334

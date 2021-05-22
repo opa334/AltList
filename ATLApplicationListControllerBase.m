@@ -11,6 +11,8 @@
 - (instancetype)init
 {
 	self = [super init];
+	dispatch_queue_attr_t qos = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, DISPATCH_QUEUE_PRIORITY_BACKGROUND, -1);
+	_iconLoadQueue = dispatch_queue_create("com.opa334.AltList.IconLoadQueue", qos);
 	_altListBundle = [NSBundle bundleForClass:[ATLApplicationListControllerBase class]];
 	[[LSApplicationWorkspace defaultWorkspace] addObserver:self];
 	return self;
@@ -45,6 +47,12 @@
 		if(hideSearchBarWhileScrollingNum)
 		{
 			self.hideSearchBarWhileScrolling = [hideSearchBarWhileScrollingNum boolValue];
+		}
+
+		NSNumber* includeIdentifiersInSearchNum = [specifier propertyForKey:@"includeIdentifiersInSearch"];
+		if(includeIdentifiersInSearchNum)
+		{
+			self.includeIdentifiersInSearch = [includeIdentifiersInSearchNum boolValue];
 		}
 	}
 
@@ -195,11 +203,6 @@
 	}
 }
 
-- (NSArray<NSSortDescriptor*>*)sortDescriptorsForApplications
-{
-	return @[[NSSortDescriptor sortDescriptorWithKey:@"localizedName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-}
-
 - (void)_populateSections
 {
 	NSArray<LSApplicationProxy*>* allInstalledApplications = [[LSApplicationWorkspace defaultWorkspace] allInstalledApplications];
@@ -278,27 +281,26 @@
 
 	[specifier setProperty:applicationProxy.bundleIdentifier forKey:@"applicationIdentifier"];
 
-	UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
-	[specifier setProperty:iconImage forKey:@"iconImage"];
+	//UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
+	//[specifier setProperty:iconImage forKey:@"iconImage"];
 
-	// faster but crashes sometimes
-	/*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+	UITableView* tableView = [self valueForKey:@"_table"];
+	dispatch_async(_iconLoadQueue, ^{
 		UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
-		[specifier setProperty:iconImage forKey:@"iconImage"];
-		NSLog(@"loaded icon in background");
-		if([self containsectionNamesSpecifier:specifier])
-		{
-			UITableView* tableView = [self valueForKey:@"_table"];
-			NSIndexPath* specifierIndexPath = [self indexPathForIndex:[self indexOfSpecifier:specifier]];
-			if([[tableView indexPathsForVisibleRows] containsObject:specifierIndexPath])
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[specifier setProperty:iconImage forKey:@"iconImage"];
+			if([self containsSpecifier:specifier])
 			{
-				dispatch_async(dispatch_get_main_queue(), ^(void){
-					NSLog(@"reloaded specifier in foreground");
-					[self reloadSpecifier:specifier];
-				});
+				NSIndexPath* specifierIndexPath = [self indexPathForIndex:[self indexOfSpecifier:specifier]];
+				if([[tableView indexPathsForVisibleRows] containsObject:specifierIndexPath])
+				{
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[self reloadSpecifier:specifier];
+					});
+				}
 			}
-		}
-	});*/
+		});
+	});
 
 	[specifier setProperty:@YES forKey:@"enabled"];
 
@@ -316,7 +318,16 @@
 
 - (BOOL)shouldHideApplicationSpecifier:(PSSpecifier*)specifier
 {
-	return ![specifier.name localizedStandardContainsString:_searchKey];
+	BOOL nameMatch = [specifier.name rangeOfString:_searchKey options:NSCaseInsensitiveSearch range:NSMakeRange(0, [specifier.name length]) locale:[NSLocale currentLocale]].location != NSNotFound;
+
+	BOOL identifierMatch = NO;
+	if(self.includeIdentifiersInSearch)
+	{
+		NSString* applicationID = [specifier propertyForKey:@"applicationIdentifier"];
+		identifierMatch = [applicationID rangeOfString:_searchKey options:NSCaseInsensitiveSearch].location != NSNotFound;
+	}
+
+	return !identifierMatch && !nameMatch;
 }
 
 - (NSArray*)createSpecifiersForApplicationSection:(ATLApplicationSection*)section

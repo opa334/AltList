@@ -15,7 +15,6 @@
 @property (nonatomic,readonly) NSArray* appTags; // 'hidden'
 + (instancetype)applicationProxyForIdentifier:(NSString*)identifier;
 - (LSApplicationRecord*)correspondingApplicationRecord;
-- (NSData*)iconDataForVariant:(int)variant withOptions:(int)options;
 @end
 
 @interface LSApplicationWorkspace (Additions)

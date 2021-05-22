@@ -16,6 +16,7 @@
 
 @interface ATLApplicationListControllerBase : PSListController <UISearchResultsUpdating, LSApplicationWorkspaceObserverProtocol>
 {
+	dispatch_queue_t _iconLoadQueue;
 	NSMutableArray* _allSpecifiers;
 	NSMutableDictionary* _specifiersByLetter;
 	NSArray<ATLApplicationSection*>* _applicationSections;
@@ -27,6 +28,7 @@
 
 @property (nonatomic) BOOL useSearchBar;
 @property (nonatomic) BOOL hideSearchBarWhileScrolling;
+@property (nonatomic) BOOL includeIdentifiersInSearch;
 @property (nonatomic) BOOL showIdentifiersAsSubtitle;
 @property (nonatomic) BOOL alphabeticIndexingEnabled;
 @property (nonatomic) BOOL hideAlphabeticSectionHeaders;
