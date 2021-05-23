@@ -351,7 +351,7 @@
 
 	[_specifiers enumerateObjectsUsingBlock:^(PSSpecifier* specifier, NSUInteger idx, BOOL *stop)
 	{
-		NSString* firstLetter = [specifier.name substringToIndex:1].lowercaseString;
+		NSString* firstLetter = [specifier.name substringToIndex:1].uppercaseString;
 		NSMutableArray* letterSpecifiers = [_specifiersByLetter objectForKey:firstLetter];
 		if(!letterSpecifiers)
 		{
@@ -368,7 +368,7 @@
 	NSMutableArray* letterGroupedSpecifiers = [NSMutableArray new];
 	for(char c = 'a'; c <= 'z'; c++)
 	{
-		NSString* cString = [NSString stringWithFormat:@"%c", c];
+		NSString* cString = [NSString stringWithFormat:@"%c", c].uppercaseString;
 		NSMutableArray* letterSpecifiers = [_specifiersByLetter objectForKey:cString];
 		if(letterSpecifiers)
 		{
