@@ -1,12 +1,11 @@
 #import "PSSpecifier.h"
 #import "PSSpecifier+AltList.h"
-#import <version.h>
 
 @implementation PSSpecifier (AltList)
 
 - (BOOL)atl_hasValidGetter
 {
-    if(IS_IOS_OR_NEWER(iOS_9_0))
+    if([self respondsToSelector:@selector(hasValidGetter)])
     {
         return [self hasValidGetter];
     }
@@ -25,7 +24,7 @@
 
 - (id)atl_performGetter
 {
-    if(IS_IOS_OR_NEWER(iOS_9_0))
+    if([self respondsToSelector:@selector(performGetter)])
     {
         return [self performGetter];
     }
@@ -41,7 +40,7 @@
 
 - (BOOL)atl_hasValidSetter
 {
-    if(IS_IOS_OR_NEWER(iOS_9_0))
+    if([self respondsToSelector:@selector(hasValidSetter)])
     {
         return [self hasValidSetter];
     }
@@ -60,7 +59,7 @@
 
 - (void)atl_performSetterWithValue:(id)value
 {
-    if(IS_IOS_OR_NEWER(iOS_9_0))
+    if([self respondsToSelector:@selector(performSetterWithValue:)])
     {
         [self performSetterWithValue:value];
     }

@@ -1,6 +1,5 @@
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
-#import <version.h>
 
 @implementation LSApplicationProxy (AltList)
 
@@ -14,6 +13,7 @@
 	return [self.applicationType isEqualToString:@"User"] && ![self atl_isHidden];
 }
 
+// always returns NO on iOS 7
 - (BOOL)atl_isHidden
 {
 	NSArray* appTags;
@@ -66,7 +66,7 @@
 
 - (NSString*)atl_nameToDisplay
 {
-	NSString* localizedName = [self atl_fastDisplayName];//self.localizedName;
+	NSString* localizedName = [self atl_fastDisplayName];
 
 	if([self.atl_bundleIdentifier rangeOfString:@"carplay" options:NSCaseInsensitiveSearch].location != NSNotFound)
 	{
@@ -81,10 +81,12 @@
 
 -(id)atl_bundleIdentifier
 {
-	if(IS_IOS_OR_NEWER(iOS_8_0))
+	// iOS 8-14
+	if([self respondsToSelector:@selector(bundleIdentifier)])
 	{
 		return [self bundleIdentifier];
 	}
+	// iOS 7
 	else
 	{
 		return [self applicationIdentifier];
