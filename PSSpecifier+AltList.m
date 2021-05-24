@@ -1,4 +1,16 @@
-#import "PSSpecifier.h"
+@interface PSSpecifier : NSObject
+{
+@public
+    id target;
+    SEL getter;
+    SEL setter;
+}
+- (BOOL)hasValidGetter;
+- (id)performGetter;
+- (BOOL)hasValidSetter;
+- (void)performSetterWithValue:(id)value;
+@end
+
 #import "PSSpecifier+AltList.h"
 
 @implementation PSSpecifier (AltList)
