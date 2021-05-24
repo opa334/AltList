@@ -11,8 +11,12 @@
 - (instancetype)init
 {
 	self = [super init];
-	dispatch_queue_attr_t qos = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, DISPATCH_QUEUE_PRIORITY_BACKGROUND, -1);
-	_iconLoadQueue = dispatch_queue_create("com.opa334.AltList.IconLoadQueue", qos);
+	if (dispatch_queue_attr_make_with_qos_class != NULL)
+	{
+		dispatch_queue_attr_t qos = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, DISPATCH_QUEUE_PRIORITY_BACKGROUND, -1);
+		_iconLoadQueue = dispatch_queue_create("com.opa334.AltList.IconLoadQueue", qos);
+	}
+
 	_altListBundle = [NSBundle bundleForClass:[ATLApplicationListControllerBase class]];
 	[[LSApplicationWorkspace defaultWorkspace] addObserver:self];
 	return self;
@@ -279,28 +283,33 @@
 		cell:PSStaticTextCell
 		edit:nil];
 
-	[specifier setProperty:applicationProxy.bundleIdentifier forKey:@"applicationIdentifier"];
+	[specifier setProperty:applicationProxy.atl_bundleIdentifier forKey:@"applicationIdentifier"];
 
-	//UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
-	//[specifier setProperty:iconImage forKey:@"iconImage"];
-
-	UITableView* tableView = [self valueForKey:@"_table"];
-	dispatch_async(_iconLoadQueue, ^{
-		UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[specifier setProperty:iconImage forKey:@"iconImage"];
-			if([self containsSpecifier:specifier])
-			{
-				NSIndexPath* specifierIndexPath = [self indexPathForIndex:[self indexOfSpecifier:specifier]];
-				if([[tableView indexPathsForVisibleRows] containsObject:specifierIndexPath])
+	if(_iconLoadQueue)
+	{
+		UITableView* tableView = [self valueForKey:@"_table"];
+		dispatch_async(_iconLoadQueue, ^{
+			UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.atl_bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[specifier setProperty:iconImage forKey:@"iconImage"];
+				if([self containsSpecifier:specifier])
 				{
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[self reloadSpecifier:specifier];
-					});
+					NSIndexPath* specifierIndexPath = [self indexPathForIndex:[self indexOfSpecifier:specifier]];
+					if([[tableView indexPathsForVisibleRows] containsObject:specifierIndexPath])
+					{
+						dispatch_async(dispatch_get_main_queue(), ^{
+							[self reloadSpecifier:specifier];
+						});
+					}
 				}
-			}
+			});
 		});
-	});
+	}
+	else
+	{
+		UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.atl_bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
+		[specifier setProperty:iconImage forKey:@"iconImage"];
+	}
 
 	[specifier setProperty:@YES forKey:@"enabled"];
 

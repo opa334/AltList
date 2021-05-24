@@ -1,21 +1,14 @@
 #import "ATLApplicationListMultiSelectionController.h"
-
-#import <Preferences/PSSpecifier.h>
-@interface PSSpecifier()
-- (BOOL)hasValidGetter;
-- (id)performGetter;
-- (BOOL)hasValidSetter;
-- (void)performSetterWithValue:(id)value;
-@end
+#import "PSSpecifier+AltList.h"
 
 @implementation ATLApplicationListMultiSelectionController
 
 - (void)loadPreferences
 {
 	PSSpecifier* specifier = [self specifier];
-	if([specifier hasValidGetter])
+	if([specifier atl_hasValidGetter])
 	{
-		_selectedApplications = [NSMutableSet setWithArray:[specifier performGetter]];
+		_selectedApplications = [NSMutableSet setWithArray:[specifier atl_performGetter]];
 	}
 
 	if(!_selectedApplications)
@@ -52,9 +45,9 @@
 	}
 
 	PSSpecifier* mainSpecifier = [self specifier];
-	if([mainSpecifier hasValidSetter])
+	if([mainSpecifier atl_hasValidSetter])
 	{
-		[mainSpecifier performSetterWithValue:[_selectedApplications allObjects]];
+		[mainSpecifier atl_performSetterWithValue:[_selectedApplications allObjects]];
 	}
 }
 

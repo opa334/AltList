@@ -1,5 +1,6 @@
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
+#import <version.h>
 
 @implementation LSApplicationProxy (AltList)
 
@@ -22,11 +23,11 @@
 		LSApplicationRecord* record = [self correspondingApplicationRecord];
 		appTags = record.appTags;
 	}
-	else
+	else if([self respondsToSelector:@selector(appTags)])
 	{
 		appTags = self.appTags;
 	}
-	return [appTags containsObject:@"hidden"] || ([self.bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
+	return [appTags containsObject:@"hidden"] || ([self.atl_bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
 }
 
 // Getting the display name is slow (up to 2ms) because it uses an IPC call
@@ -67,7 +68,7 @@
 {
 	NSString* localizedName = [self atl_fastDisplayName];//self.localizedName;
 
-	if([self.bundleIdentifier rangeOfString:@"carplay" options:NSCaseInsensitiveSearch].location != NSNotFound)
+	if([self.atl_bundleIdentifier rangeOfString:@"carplay" options:NSCaseInsensitiveSearch].location != NSNotFound)
 	{
 		if([localizedName rangeOfString:@"carplay" options:NSCaseInsensitiveSearch range:NSMakeRange(0, localizedName.length) locale:[NSLocale currentLocale]].location == NSNotFound)
 		{
@@ -76,6 +77,18 @@
 	}
 
 	return localizedName;
+}
+
+-(id)atl_bundleIdentifier
+{
+	if(IS_IOS_OR_NEWER(iOS_8_0))
+	{
+		return [self bundleIdentifier];
+	}
+	else
+	{
+		return [self applicationIdentifier];
+	}
 }
 
 @end
