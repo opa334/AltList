@@ -366,9 +366,9 @@
 {
 	BOOL firstSpecifier = YES;
 	NSMutableArray* letterGroupedSpecifiers = [NSMutableArray new];
-	for(char c = 'a'; c <= 'z'; c++)
+	for(char c = 'A'; c <= 'Z'; c++)
 	{
-		NSString* cString = [NSString stringWithFormat:@"%c", c].uppercaseString;
+		NSString* cString = [NSString stringWithFormat:@"%c", c];
 		NSMutableArray* letterSpecifiers = [_specifiersByLetter objectForKey:cString];
 		if(letterSpecifiers)
 		{
