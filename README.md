@@ -212,8 +212,6 @@ Preferences also need to be handled in your `PSListController`/`ATLApplicationLi
 	</array>
 	<key>showIdentifiersAsSubtitle</key>
 	<true/>
-	<key>defaultApplicationSwitchValue</key>
-	<false/>
 	<key>useSearchBar</key>
 	<true/>
 </dict>
