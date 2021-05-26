@@ -19,7 +19,7 @@ LSApplicationProxy* appProxy = [LSApplicationProxy applicationProxyForIdentifier
 * Supports application sections (similar to AppList)
 * Supports alphabetic indexing if only one section is specified
 * Doesn't reinvent the wheel
-* Supports iOS 9 and up
+* Supports iOS 7 and up
 
 ## Installation
 Run [install_to_theos.sh](install_to_theos.sh) and add it to the makefile of your project:
@@ -212,8 +212,6 @@ Preferences also need to be handled in your `PSListController`/`ATLApplicationLi
 	</array>
 	<key>showIdentifiersAsSubtitle</key>
 	<true/>
-	<key>defaultApplicationSwitchValue</key>
-	<false/>
 	<key>useSearchBar</key>
 	<true/>
 </dict>
