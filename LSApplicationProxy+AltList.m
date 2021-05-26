@@ -42,20 +42,29 @@
 		return cachedDisplayName;
 	}
 
-	NSBundle* bundle = [NSBundle bundleWithURL:[self valueForKey:@"_bundleURL"]];
 	NSString* localizedName;
 
-	localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-	if(!localizedName || [localizedName isEqualToString:@""])
-	{ 
-		localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
+	NSURL* bundleURL = [self valueForKey:@"_bundleURL"];
+	if(!bundleURL || ![bundleURL checkResourceIsReachableAndReturnError:nil])
+	{
+		localizedName = self.localizedName;
+	}
+	else
+	{
+		NSBundle* bundle = [NSBundle bundleWithURL:bundleURL];
+
+		localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleDisplayName"];
 		if(!localizedName || [localizedName isEqualToString:@""])
-		{
-			localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
+		{ 
+			localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
 			if(!localizedName || [localizedName isEqualToString:@""])
 			{
-				//last possible fallback: use slow IPC call
-				localizedName = self.localizedName;
+				localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
+				if(!localizedName || [localizedName isEqualToString:@""])
+				{
+					//last possible fallback: use slow IPC call
+					localizedName = self.localizedName;
+				}
 			}
 		}
 	}
