@@ -1,6 +1,8 @@
 #import "ATLApplicationListControllerBase.h"
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
+#import "ATLApplicationSubtitleSwitchCell.h"
+#import "ATLApplicationSubtitleCell.h"
 
 @interface UIImage (Private)
 + (instancetype)_applicationIconImageForBundleIdentifier:(NSString*)bundleIdentifier format:(int)format scale:(CGFloat)scale;
@@ -136,12 +138,16 @@
 
 - (void)applicationsDidInstall:(id)arg1
 {
-	[self reloadApplications];
+	dispatch_async(dispatch_get_main_queue(), ^(void){
+		[self reloadApplications];
+	});
 }
 
 - (void)applicationsDidUninstall:(id)arg1
 {
-	[self reloadApplications];
+	dispatch_async(dispatch_get_main_queue(), ^(void){
+		[self reloadApplications];
+	});
 }
 
 // LSApplicationWorkspaceObserverProtocol end
@@ -260,6 +266,33 @@
 	return [_altListBundle localizedStringForKey:string value:string table:nil];
 }
 
+- (PSCellType)cellTypeForApplicationCells
+{
+	return PSStaticTextCell;
+}
+
+- (Class)customCellClassForCellType:(PSCellType)cellType
+{
+	if([self shouldShowSubtitles])
+	{
+		if(cellType == PSSwitchCell)
+		{
+			return [ATLApplicationSubtitleSwitchCell class];
+		}
+		else
+		{
+			return [ATLApplicationSubtitleCell class];
+		}
+	}
+
+	return nil;
+}
+
+- (Class)detailControllerClassForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
+{
+	return nil;
+}
+
 - (SEL)getterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
 {
 	return nil;
@@ -274,16 +307,31 @@
 {
 	SEL setter = [self setterForSpecifierOfApplicationProxy:applicationProxy];
 	SEL getter = [self getterForSpecifierOfApplicationProxy:applicationProxy];
+	PSCellType cellType = [self cellTypeForApplicationCells];
 
 	PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:[applicationProxy atl_nameToDisplay]
 		target:self
 		set:setter
 		get:getter
 		detail:nil
-		cell:PSStaticTextCell
+		cell:cellType
 		edit:nil];
 
-	[specifier setProperty:applicationProxy.atl_bundleIdentifier forKey:@"applicationIdentifier"];
+	NSString* bundleIdentifier = applicationProxy.atl_bundleIdentifier;
+	specifier.identifier = bundleIdentifier;
+	[specifier setProperty:bundleIdentifier forKey:@"applicationIdentifier"];
+
+	Class customCellClass = [self customCellClassForCellType:cellType];
+	if(customCellClass)
+	{
+		[specifier setProperty:customCellClass forKey:@"cellClass"];
+	}
+
+	Class detailControllerClass = [self detailControllerClassForSpecifierOfApplicationProxy:applicationProxy];
+	if(detailControllerClass)
+	{
+		specifier.detailControllerClass = detailControllerClass;
+	}
 
 	if(_iconLoadQueue)
 	{
@@ -298,7 +346,10 @@
 					if([[tableView indexPathsForVisibleRows] containsObject:specifierIndexPath])
 					{
 						dispatch_async(dispatch_get_main_queue(), ^{
-							[self reloadSpecifier:specifier];
+							if(!_isReloadingSpecifiers)
+							{
+								[self reloadSpecifier:specifier];
+							}
 						});
 					}
 				}
@@ -339,9 +390,33 @@
 	return !identifierMatch && !nameMatch;
 }
 
+- (BOOL)shouldShowSubtitles
+{
+	if(self.showIdentifiersAsSubtitle)
+	{
+		return YES;
+	}
+	return NO;
+}
+
+- (NSString*)subtitleForApplicationWithIdentifier:(NSString*)applicationID
+{
+	if(self.showIdentifiersAsSubtitle)
+	{
+		return applicationID;
+	}
+	return nil;
+}
+
+- (NSString*)_subtitleForSpecifier:(PSSpecifier*)specifier
+{
+	return [self subtitleForApplicationWithIdentifier:[specifier propertyForKey:@"applicationIdentifier"]];
+}
+
 - (NSArray*)createSpecifiersForApplicationSection:(ATLApplicationSection*)section
 {
 	NSMutableArray* sectionSpecifiers = [NSMutableArray new];
+
 	[section.applicationsInSection enumerateObjectsUsingBlock:^(LSApplicationProxy* appProxy, NSUInteger idx, BOOL *stop)
 	{
 		PSSpecifier* appSpecifier = [self createSpecifierForApplicationProxy:appProxy];
@@ -412,6 +487,13 @@
 {
 	_allSpecifiers = nil;
 	[self reloadSpecifiers];
+}
+
+- (void)reloadSpecifiers
+{
+	_isReloadingSpecifiers = YES;
+	[super reloadSpecifiers];
+	_isReloadingSpecifiers = NO;
 }
 
 - (NSMutableArray*)specifiers

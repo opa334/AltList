@@ -23,6 +23,7 @@
 	UISearchController* _searchController;
 	NSString* _searchKey;
 	BOOL _isPopulated;
+	BOOL _isReloadingSpecifiers;
 	NSBundle* _altListBundle;
 }
 
@@ -47,6 +48,16 @@
 
 - (BOOL)shouldHideApplicationSpecifiers;
 - (BOOL)shouldHideApplicationSpecifier:(PSSpecifier*)specifier;
+
+- (BOOL)shouldShowSubtitles;
+- (NSString*)subtitleForApplicationWithIdentifier:(NSString*)applicationID;
+- (NSString*)_subtitleForSpecifier:(PSSpecifier*)specifier;
+
+- (PSCellType)cellTypeForApplicationCells;
+- (Class)customCellClassForCellType:(PSCellType)cellType;
+- (Class)detailControllerClassForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy;
+- (SEL)getterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy;
+- (SEL)setterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy;
 
 - (PSSpecifier*)createSpecifierForApplicationProxy:(LSApplicationProxy*)applicationProxy;
 - (NSArray*)createSpecifiersForApplicationSection:(ATLApplicationSection*)section;

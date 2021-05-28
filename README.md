@@ -69,7 +69,7 @@ ATLApplicationListControllerBase is the base class inherited by the other classe
 | `useSearchBar`                 | Boolean | false               | Whether there should be a search bar at the top that allows to search for applications [(Example)](.images/1.PNG?raw=true) |
 | `hideSearchBarWhileScrolling`  | Boolean | false               | When `useSearchBar` is enabled, whether the search bar should be hidden while scrolling (Always true on iOS 10 and below) [(Example)](.images/2.PNG?raw=true) |
 | `includeIdentifiersInSearch`   | Boolean | false               | When `useSearchBar` is enabled, whether it should be possible to search for apps by their identifier. When this is false, it is only possible to search for apps by their name.
-| `showIdentifiersAsSubtitle`    | Boolean | false               | Whether the application identifiers should be shown in the subtitle (note: implemented by subclasses) [(Example)](.images/3.PNG?raw=true) |
+| `showIdentifiersAsSubtitle`    | Boolean | false               | Whether the application identifiers should be shown in the subtitle [(Example)](.images/3.PNG?raw=true) |
 | `alphabeticIndexingEnabled`    | Boolean | false               | When there is only one section, whether to section and index it by the starting letters [(Example)](.images/4.PNG?raw=true) |
 | `hideAlphabeticSectionHeaders` | Boolean | false               | When `alphabeticIndexingEnabled` is true, whether to hide the sections that contain the first letters [(Example)](.images/5.PNG?raw=true) |
 | `localizationBundlePath`       | String  | @""                 | Path to the bundle that should be used for localizing custom section titles |
@@ -84,6 +84,13 @@ ATLApplicationListControllerBase is the base class inherited by the other classe
 | `- (void)reloadApplications`                                                               | Reload applications and specifiers |
 | `- (BOOL)shouldHideApplicationSpecifiers`                                                  | Whether any specifier at all should be hidden (internally used for search bar) |
 | `- (BOOL)shouldHideApplicationSpecifier:(PSSpecifier*)specifier`                           | Whether the specifier `specifier` should be hidden (internally used for search bar) |
+| `- (BOOL)shouldShowSubtitles`                           | Whether subtitles should be shown on the application cells |
+| `- (NSString*)subtitleForApplicationWithIdentifier:(NSString*)applicationID`                           | The subtitle that should be displayed in the cell for the specific application that's passed as `applicationID` |
+| `- (PSCellType)cellTypeForApplicationCells`                           | Cell type for the application cells |
+| `- (Class)customCellClassForCellType:(PSCellType)cellType`                           | Custom cell class for the application cells |
+| `- (Class)detailControllerClassForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy`                           | detailControllerClass to be used by the application specifiers |
+| `- (SEL)getterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy`                           | getter to be used by the application specifiers |
+| `- (SEL)setterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy`                           | setter to be used by the application specifiers |
 | `- (PSSpecifier*)createSpecifierForApplicationProxy:(LSApplicationProxy*)applicationProxy` | Create a specifier for the application represented by `applicationProxy` |
 | `- (NSArray*)createSpecifiersForApplicationSection:(ATLApplicationSection*)section`        | Create the specicifers for a whole application section represented by `section` (Calls the method above) |
 

@@ -26,18 +26,6 @@
 	}
 }
 
-- (PSSpecifier*)createSpecifierForApplicationProxy:(LSApplicationProxy*)applicationProxy
-{
-	PSSpecifier* specifier = [super createSpecifierForApplicationProxy:applicationProxy];
-
-	if(self.showIdentifiersAsSubtitle)
-	{
-		[specifier setProperty:NSClassFromString(@"ATLApplicationSubtitleCell") forKey:@"cellClass"];
-	}
-
-	return specifier;
-}
-
 - (PSTableCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	PSTableCell* tableCell = (PSTableCell*)[super tableView:tableView cellForRowAtIndexPath:indexPath];

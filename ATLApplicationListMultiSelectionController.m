@@ -64,6 +64,11 @@
 	return @(_defaultApplicationSwitchValue);
 }
 
+- (PSCellType)cellTypeForApplicationCells
+{
+	return PSSwitchCell;
+}
+
 - (SEL)getterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
 {
 	return @selector(readApplicationEnabled:);
@@ -72,17 +77,6 @@
 - (SEL)setterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
 {
 	return @selector(setApplicationEnabled:specifier:);
-}
-
-- (PSSpecifier*)createSpecifierForApplicationProxy:(LSApplicationProxy*)applicationProxy
-{
-	PSSpecifier* specifier = [super createSpecifierForApplicationProxy:applicationProxy];
-	specifier.cellType = PSSwitchCell;
-	if(self.showIdentifiersAsSubtitle)
-	{
-		[specifier setProperty:NSClassFromString(@"ATLApplicationSubtitleSwitchCell") forKey:@"cellClass"];
-	}
-	return specifier;
 }
 
 @end
