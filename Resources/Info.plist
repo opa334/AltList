@@ -19,6 +19,6 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSPrincipalClass</key>
-	<string>ATLApplicationListSelectionController</string>
+	<string>ATLApplicationListControllerBase</string>
 </dict>
 </plist>

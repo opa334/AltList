@@ -25,6 +25,8 @@
 		</array>
 		<key>isController</key>
 		<true/>
+		<key>overridePrincipalClass</key>
+		<true/>
 		<key>label</key>
 		<string>AltListTestClasslessPreferences</string>
 		<key>useSearchBar</key>
