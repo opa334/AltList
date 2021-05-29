@@ -8,13 +8,13 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>AltListTestBundle First Page</string>
+			<string>AltListTestPreferences First Page</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Test 1</string>
 			<key>detail</key>
@@ -39,7 +39,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Test 2</string>
 			<key>detail</key>
@@ -76,7 +76,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Test 3</string>
 			<key>detail</key>
@@ -109,7 +109,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Test 4</string>
 			<key>detail</key>
@@ -142,7 +142,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Test 5</string>
 			<key>detail</key>
@@ -167,7 +167,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Test 6</string>
 			<key>detail</key>
@@ -192,7 +192,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Test 7</string>
 			<key>detail</key>
@@ -221,7 +221,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Test 7.5</string>
 			<key>detail</key>
@@ -254,7 +254,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.opa334.altlisttestbundle</string>
+			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
 			<string>Custom Type + Localization</string>
 			<key>detail</key>
@@ -314,6 +314,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>AltListTestBundle</string>
+	<string>AltListTestPreferences</string>
 </dict>
 </plist>
