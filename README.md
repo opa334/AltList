@@ -35,6 +35,10 @@ Unlike AppList it is highly customizable, so if you want to adapt something you 
 
 All classes can be configured via values in your plist.
 
+## Plist-Only approach
+
+For very simple preferences, it is possible to use AltList straight from your entry.plist without implementing any class. For an example check out [AltListTestBundlelessPreferences](AltListTestBundlelessPreferences/layout/Library/PreferenceLoader/Preferences/AltListTestBundlelessPreferences.plist).
+
 ### ATLApplicationSection
 
 Just like the original AppList, AltList allows you to specify the sections of applications it should display.

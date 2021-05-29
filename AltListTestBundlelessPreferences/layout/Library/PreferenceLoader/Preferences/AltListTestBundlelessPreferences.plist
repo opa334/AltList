@@ -7,15 +7,13 @@
 		<key>bundle</key>
 		<string>AltList</string>
 		<key>cell</key>
-		<string>PSLinkCell</string>
+		<string>PSLinkListCell</string>
 		<key>detail</key>
-		<string>ATLApplicationListSelectionController</string>
+		<string>ATLApplicationListMultiSelectionController</string>
 		<key>key</key>
-		<string>test</string>
+		<string>selectedApplications</string>
 		<key>defaults</key>
-		<string>com.opa334.altlisttestclasslesspreferences</string>
-		<key>label</key>
-		<string>AltList Classless Selection</string>
+		<string>com.opa334.altlisttestbundlelesspreferences</string>
 		<key>sections</key>
 		<array>
 			<dict>
@@ -28,7 +26,7 @@
 		<key>overridePrincipalClass</key>
 		<true/>
 		<key>label</key>
-		<string>AltListTestClasslessPreferences</string>
+		<string>AltListTestBundlelessPreferences</string>
 		<key>useSearchBar</key>
 		<true/>
 	</dict>

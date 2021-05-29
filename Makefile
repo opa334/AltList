@@ -19,6 +19,6 @@ after-AltList-stage::
 include $(THEOS_MAKE_PATH)/framework.mk
 ifeq ($(PACKAGE_BUILDNAME),debug)
 SUBPROJECTS += AltListTestPreferences
-SUBPROJECTS += AltListTestClasslessPreferences
+SUBPROJECTS += AltListTestBundlelessPreferences
 endif
 include $(THEOS_MAKE_PATH)/aggregate.mk
