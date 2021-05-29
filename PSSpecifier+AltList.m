@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 @interface PSSpecifier : NSObject
 {
 @public
@@ -10,7 +11,6 @@
 - (BOOL)hasValidSetter;
 - (void)performSetterWithValue:(id)value;
 @end
-
 #import "PSSpecifier+AltList.h"
 
 @implementation PSSpecifier (AltList)

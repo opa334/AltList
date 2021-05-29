@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "ATLApplicationListSubcontroller.h"
 #import <Preferences/PSSpecifier.h>
 

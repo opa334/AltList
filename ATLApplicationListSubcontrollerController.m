@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "ATLApplicationListSubcontrollerController.h"
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"

@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 @interface LSBundleProxy : NSObject
 @property (nonatomic,readonly) NSString* bundleIdentifier;
 @property (nonatomic,readonly) NSURL* bundleURL;

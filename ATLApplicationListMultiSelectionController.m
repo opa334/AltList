@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "ATLApplicationListMultiSelectionController.h"
 #import "PSSpecifier+AltList.h"
 

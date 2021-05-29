@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "ATLApplicationSubtitleSwitchCell.h"
 
 #import "ATLApplicationListControllerBase.h"
