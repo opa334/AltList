@@ -6,4 +6,5 @@
 - (BOOL)atl_isHidden;
 - (NSString*)atl_fastDisplayName;
 - (NSString*)atl_nameToDisplay;
+@property (nonatomic,readonly) NSString* atl_bundleIdentifier;
 @end

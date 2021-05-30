@@ -1,11 +1,6 @@
+#import <Foundation/Foundation.h>
 #import "ATLApplicationListSelectionController.h"
-
-@interface PSSpecifier()
-- (BOOL)hasValidGetter;
-- (id)performGetter;
-- (BOOL)hasValidSetter;
-- (void)performSetterWithValue:(id)value;
-@end
+#import "PSSpecifier+AltList.h"
 
 @interface PSTableCell()
 - (void)setChecked:(BOOL)checked;
@@ -18,9 +13,9 @@
 	[super loadPreferences];
 
 	PSSpecifier* specifier = [self specifier];
-	if([specifier hasValidGetter])
+	if([specifier atl_hasValidGetter])
 	{
-		_selectedApplicationID = [specifier performGetter];
+		_selectedApplicationID = [specifier atl_performGetter];
 	}
 	if(!_selectedApplicationID)
 	{
@@ -30,18 +25,6 @@
 			_selectedApplicationID = defaultValue;
 		}
 	}
-}
-
-- (PSSpecifier*)createSpecifierForApplicationProxy:(LSApplicationProxy*)applicationProxy
-{
-	PSSpecifier* specifier = [super createSpecifierForApplicationProxy:applicationProxy];
-
-	if(self.showIdentifiersAsSubtitle)
-	{
-		[specifier setProperty:NSClassFromString(@"ATLApplicationSubtitleCell") forKey:@"cellClass"];
-	}
-
-	return specifier;
 }
 
 - (PSTableCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -74,9 +57,9 @@
 	[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
 
 	PSSpecifier* specifier = [self specifier];
-	if([specifier hasValidSetter])
+	if([specifier atl_hasValidSetter])
 	{
-		[specifier performSetterWithValue:_selectedApplicationID];
+		[specifier atl_performSetterWithValue:_selectedApplicationID];
 	}
 }
 

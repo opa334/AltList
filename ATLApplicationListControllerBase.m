@@ -1,6 +1,9 @@
+#import <Foundation/Foundation.h>
 #import "ATLApplicationListControllerBase.h"
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
+#import "ATLApplicationSubtitleSwitchCell.h"
+#import "ATLApplicationSubtitleCell.h"
 
 @interface UIImage (Private)
 + (instancetype)_applicationIconImageForBundleIdentifier:(NSString*)bundleIdentifier format:(int)format scale:(CGFloat)scale;
@@ -11,8 +14,12 @@
 - (instancetype)init
 {
 	self = [super init];
-	dispatch_queue_attr_t qos = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, DISPATCH_QUEUE_PRIORITY_BACKGROUND, -1);
-	_iconLoadQueue = dispatch_queue_create("com.opa334.AltList.IconLoadQueue", qos);
+	if (dispatch_queue_attr_make_with_qos_class != NULL)
+	{
+		dispatch_queue_attr_t qos = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, DISPATCH_QUEUE_PRIORITY_BACKGROUND, -1);
+		_iconLoadQueue = dispatch_queue_create("com.opa334.AltList.IconLoadQueue", qos);
+	}
+
 	_altListBundle = [NSBundle bundleForClass:[ATLApplicationListControllerBase class]];
 	[[LSApplicationWorkspace defaultWorkspace] addObserver:self];
 	return self;
@@ -132,12 +139,16 @@
 
 - (void)applicationsDidInstall:(id)arg1
 {
-	[self reloadApplications];
+	dispatch_async(dispatch_get_main_queue(), ^(void){
+		[self reloadApplications];
+	});
 }
 
 - (void)applicationsDidUninstall:(id)arg1
 {
-	[self reloadApplications];
+	dispatch_async(dispatch_get_main_queue(), ^(void){
+		[self reloadApplications];
+	});
 }
 
 // LSApplicationWorkspaceObserverProtocol end
@@ -256,6 +267,33 @@
 	return [_altListBundle localizedStringForKey:string value:string table:nil];
 }
 
+- (PSCellType)cellTypeForApplicationCells
+{
+	return PSStaticTextCell;
+}
+
+- (Class)customCellClassForCellType:(PSCellType)cellType
+{
+	if([self shouldShowSubtitles])
+	{
+		if(cellType == PSSwitchCell)
+		{
+			return [ATLApplicationSubtitleSwitchCell class];
+		}
+		else
+		{
+			return [ATLApplicationSubtitleCell class];
+		}
+	}
+
+	return nil;
+}
+
+- (Class)detailControllerClassForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
+{
+	return nil;
+}
+
 - (SEL)getterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
 {
 	return nil;
@@ -270,37 +308,60 @@
 {
 	SEL setter = [self setterForSpecifierOfApplicationProxy:applicationProxy];
 	SEL getter = [self getterForSpecifierOfApplicationProxy:applicationProxy];
+	PSCellType cellType = [self cellTypeForApplicationCells];
 
 	PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:[applicationProxy atl_nameToDisplay]
 		target:self
 		set:setter
 		get:getter
 		detail:nil
-		cell:PSStaticTextCell
+		cell:cellType
 		edit:nil];
 
-	[specifier setProperty:applicationProxy.bundleIdentifier forKey:@"applicationIdentifier"];
+	NSString* bundleIdentifier = applicationProxy.atl_bundleIdentifier;
+	specifier.identifier = bundleIdentifier;
+	[specifier setProperty:bundleIdentifier forKey:@"applicationIdentifier"];
 
-	//UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
-	//[specifier setProperty:iconImage forKey:@"iconImage"];
+	Class customCellClass = [self customCellClassForCellType:cellType];
+	if(customCellClass)
+	{
+		[specifier setProperty:customCellClass forKey:@"cellClass"];
+	}
 
-	UITableView* tableView = [self valueForKey:@"_table"];
-	dispatch_async(_iconLoadQueue, ^{
-		UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[specifier setProperty:iconImage forKey:@"iconImage"];
-			if([self containsSpecifier:specifier])
-			{
-				NSIndexPath* specifierIndexPath = [self indexPathForIndex:[self indexOfSpecifier:specifier]];
-				if([[tableView indexPathsForVisibleRows] containsObject:specifierIndexPath])
+	Class detailControllerClass = [self detailControllerClassForSpecifierOfApplicationProxy:applicationProxy];
+	if(detailControllerClass)
+	{
+		specifier.detailControllerClass = detailControllerClass;
+	}
+
+	if(_iconLoadQueue)
+	{
+		UITableView* tableView = [self valueForKey:@"_table"];
+		dispatch_async(_iconLoadQueue, ^{
+			UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.atl_bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[specifier setProperty:iconImage forKey:@"iconImage"];
+				if([self containsSpecifier:specifier])
 				{
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[self reloadSpecifier:specifier];
-					});
+					NSIndexPath* specifierIndexPath = [self indexPathForIndex:[self indexOfSpecifier:specifier]];
+					if([[tableView indexPathsForVisibleRows] containsObject:specifierIndexPath])
+					{
+						dispatch_async(dispatch_get_main_queue(), ^{
+							if(!_isReloadingSpecifiers)
+							{
+								[self reloadSpecifier:specifier];
+							}
+						});
+					}
 				}
-			}
+			});
 		});
-	});
+	}
+	else
+	{
+		UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.atl_bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
+		[specifier setProperty:iconImage forKey:@"iconImage"];
+	}
 
 	[specifier setProperty:@YES forKey:@"enabled"];
 
@@ -330,9 +391,33 @@
 	return !identifierMatch && !nameMatch;
 }
 
+- (BOOL)shouldShowSubtitles
+{
+	if(self.showIdentifiersAsSubtitle)
+	{
+		return YES;
+	}
+	return NO;
+}
+
+- (NSString*)subtitleForApplicationWithIdentifier:(NSString*)applicationID
+{
+	if(self.showIdentifiersAsSubtitle)
+	{
+		return applicationID;
+	}
+	return nil;
+}
+
+- (NSString*)_subtitleForSpecifier:(PSSpecifier*)specifier
+{
+	return [self subtitleForApplicationWithIdentifier:[specifier propertyForKey:@"applicationIdentifier"]];
+}
+
 - (NSArray*)createSpecifiersForApplicationSection:(ATLApplicationSection*)section
 {
 	NSMutableArray* sectionSpecifiers = [NSMutableArray new];
+
 	[section.applicationsInSection enumerateObjectsUsingBlock:^(LSApplicationProxy* appProxy, NSUInteger idx, BOOL *stop)
 	{
 		PSSpecifier* appSpecifier = [self createSpecifierForApplicationProxy:appProxy];
@@ -351,7 +436,7 @@
 
 	[_specifiers enumerateObjectsUsingBlock:^(PSSpecifier* specifier, NSUInteger idx, BOOL *stop)
 	{
-		NSString* firstLetter = [specifier.name substringToIndex:1].lowercaseString;
+		NSString* firstLetter = [specifier.name substringToIndex:1].uppercaseString;
 		NSMutableArray* letterSpecifiers = [_specifiersByLetter objectForKey:firstLetter];
 		if(!letterSpecifiers)
 		{
@@ -366,7 +451,7 @@
 {
 	BOOL firstSpecifier = YES;
 	NSMutableArray* letterGroupedSpecifiers = [NSMutableArray new];
-	for(char c = 'a'; c <= 'z'; c++)
+	for(char c = 'A'; c <= 'Z'; c++)
 	{
 		NSString* cString = [NSString stringWithFormat:@"%c", c];
 		NSMutableArray* letterSpecifiers = [_specifiersByLetter objectForKey:cString];
@@ -403,6 +488,13 @@
 {
 	_allSpecifiers = nil;
 	[self reloadSpecifiers];
+}
+
+- (void)reloadSpecifiers
+{
+	_isReloadingSpecifiers = YES;
+	[super reloadSpecifiers];
+	_isReloadingSpecifiers = NO;
 }
 
 - (NSMutableArray*)specifiers

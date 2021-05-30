@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>entry</key>
+	<dict>
+		<key>bundle</key>
+		<string>AltList</string>
+		<key>cell</key>
+		<string>PSLinkListCell</string>
+		<key>detail</key>
+		<string>ATLApplicationListMultiSelectionController</string>
+		<key>key</key>
+		<string>selectedApplications</string>
+		<key>defaults</key>
+		<string>com.opa334.altlisttestbundlelesspreferences</string>
+		<key>sections</key>
+		<array>
+			<dict>
+				<key>sectionType</key>
+				<string>Visible</string>
+			</dict>
+		</array>
+		<key>isController</key>
+		<true/>
+		<key>overridePrincipalClass</key>
+		<true/>
+		<key>label</key>
+		<string>AltListTestBundlelessPreferences</string>
+		<key>useSearchBar</key>
+		<true/>
+	</dict>
+</dict>
+</plist>

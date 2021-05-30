@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
 
@@ -13,6 +14,7 @@
 	return [self.applicationType isEqualToString:@"User"] && ![self atl_isHidden];
 }
 
+// always returns NO on iOS 7
 - (BOOL)atl_isHidden
 {
 	NSArray* appTags;
@@ -22,11 +24,11 @@
 		LSApplicationRecord* record = [self correspondingApplicationRecord];
 		appTags = record.appTags;
 	}
-	else
+	else if([self respondsToSelector:@selector(appTags)])
 	{
 		appTags = self.appTags;
 	}
-	return [appTags containsObject:@"hidden"] || ([self.bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
+	return [appTags containsObject:@"hidden"] || ([self.atl_bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
 }
 
 // Getting the display name is slow (up to 2ms) because it uses an IPC call
@@ -41,20 +43,29 @@
 		return cachedDisplayName;
 	}
 
-	NSBundle* bundle = [NSBundle bundleWithURL:[self valueForKey:@"_bundleURL"]];
 	NSString* localizedName;
 
-	localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-	if(!localizedName || [localizedName isEqualToString:@""])
-	{ 
-		localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
+	NSURL* bundleURL = [self valueForKey:@"_bundleURL"];
+	if(!bundleURL || ![bundleURL checkResourceIsReachableAndReturnError:nil])
+	{
+		localizedName = self.localizedName;
+	}
+	else
+	{
+		NSBundle* bundle = [NSBundle bundleWithURL:bundleURL];
+
+		localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleDisplayName"];
 		if(!localizedName || [localizedName isEqualToString:@""])
-		{
-			localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
+		{ 
+			localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
 			if(!localizedName || [localizedName isEqualToString:@""])
 			{
-				//last possible fallback: use slow IPC call
-				localizedName = self.localizedName;
+				localizedName = [bundle objectForInfoDictionaryKey:@"CFBundleExecutable"];
+				if(!localizedName || [localizedName isEqualToString:@""])
+				{
+					//last possible fallback: use slow IPC call
+					localizedName = self.localizedName;
+				}
 			}
 		}
 	}
@@ -65,9 +76,9 @@
 
 - (NSString*)atl_nameToDisplay
 {
-	NSString* localizedName = [self atl_fastDisplayName];//self.localizedName;
+	NSString* localizedName = [self atl_fastDisplayName];
 
-	if([self.bundleIdentifier rangeOfString:@"carplay" options:NSCaseInsensitiveSearch].location != NSNotFound)
+	if([self.atl_bundleIdentifier rangeOfString:@"carplay" options:NSCaseInsensitiveSearch].location != NSNotFound)
 	{
 		if([localizedName rangeOfString:@"carplay" options:NSCaseInsensitiveSearch range:NSMakeRange(0, localizedName.length) locale:[NSLocale currentLocale]].location == NSNotFound)
 		{
@@ -76,6 +87,20 @@
 	}
 
 	return localizedName;
+}
+
+-(id)atl_bundleIdentifier
+{
+	// iOS 8-14
+	if([self respondsToSelector:@selector(bundleIdentifier)])
+	{
+		return [self bundleIdentifier];
+	}
+	// iOS 7
+	else
+	{
+		return [self applicationIdentifier];
+	}
 }
 
 @end

@@ -1,5 +1,7 @@
+#import <Foundation/Foundation.h>
 #import "ATLApplicationListSubcontrollerController.h"
 #import "CoreServices.h"
+#import "LSApplicationProxy+AltList.h"
 
 @implementation ATLApplicationListSubcontrollerController
 
@@ -26,31 +28,17 @@
 
 - (SEL)getterForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
 {
-	if(!self.showIdentifiersAsSubtitle)
-	{
-		return @selector(_previewStringForSpecifier:);
-	}
-
-	return nil;
+	return @selector(_previewStringForSpecifier:);
 }
 
-- (PSSpecifier*)createSpecifierForApplicationProxy:(LSApplicationProxy*)applicationProxy
+- (PSCellType)cellTypeForApplicationCells
 {
-	PSSpecifier* specifier = [super createSpecifierForApplicationProxy:applicationProxy];
+	return PSLinkListCell;
+}
 
-	specifier.detailControllerClass = self.subcontrollerClass;
-	[specifier setProperty:applicationProxy.bundleIdentifier forKey:@"key"];
-	if(self.showIdentifiersAsSubtitle)
-	{
-		specifier.cellType = PSLinkCell;
-		[specifier setProperty:NSClassFromString(@"ATLApplicationSubtitleCell") forKey:@"cellClass"];
-	}
-	else
-	{
-		specifier.cellType = PSLinkListCell;
-	}
-
-	return specifier;
+- (Class)detailControllerClassForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
+{
+	return self.subcontrollerClass;
 }
 
 @end
