@@ -25,6 +25,7 @@
 	BOOL _isPopulated;
 	BOOL _isReloadingSpecifiers;
 	NSBundle* _altListBundle;
+	UIImage* _placeholderAppIcon;
 }
 
 @property (nonatomic) BOOL useSearchBar;

@@ -14,6 +14,7 @@
 - (instancetype)init
 {
 	self = [super init];
+	_placeholderAppIcon = [UIImage _applicationIconImageForBundleIdentifier:@"com.apple.WebSheet" format:0 scale:[UIScreen mainScreen].scale];
 	if (dispatch_queue_attr_make_with_qos_class != NULL)
 	{
 		dispatch_queue_attr_t qos = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, DISPATCH_QUEUE_PRIORITY_BACKGROUND, -1);
@@ -124,11 +125,21 @@
 	return [super tableView:tableView titleForFooterInSection:section];
 }
 
-- (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView
+- (NSArray<NSString*>*)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
 	if(self.alphabeticIndexingEnabled)
 	{
-		return [[_specifiersByLetter allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+		NSMutableArray* firstLetters = [_specifiersByLetter allKeys].mutableCopy;
+		[firstLetters sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+
+		if([firstLetters.firstObject isEqualToString:@"#"])
+		{
+			// if there is a section for applications that don't start with a letter, move it to the bottom
+			[firstLetters removeObjectAtIndex:0];
+			[firstLetters addObject:@"#"];
+		}
+
+		return firstLetters;
 	}
 	return nil;
 }
@@ -216,7 +227,7 @@
 
 - (void)_populateSections
 {
-	NSArray<LSApplicationProxy*>* allInstalledApplications = [[LSApplicationWorkspace defaultWorkspace] allInstalledApplications];
+	NSArray<LSApplicationProxy*>* allInstalledApplications = [[LSApplicationWorkspace defaultWorkspace] atl_allInstalledApplications];
 	[_applicationSections enumerateObjectsUsingBlock:^(ATLApplicationSection* section, NSUInteger idx, BOOL *stop)
 	{
 		[section populateFromAllApplications:allInstalledApplications];
@@ -322,6 +333,8 @@
 	specifier.identifier = bundleIdentifier;
 	[specifier setProperty:bundleIdentifier forKey:@"applicationIdentifier"];
 
+	[specifier setProperty:_placeholderAppIcon forKey:@"iconImage"];
+
 	Class customCellClass = [self customCellClassForCellType:cellType];
 	if(customCellClass)
 	{
@@ -338,6 +351,7 @@
 	{
 		UITableView* tableView = [self valueForKey:@"_table"];
 		dispatch_async(_iconLoadQueue, ^{
+			//usleep(1000 * 500); // (test delay for debugging)
 			UIImage* iconImage = [UIImage _applicationIconImageForBundleIdentifier:applicationProxy.atl_bundleIdentifier format:0 scale:[UIScreen mainScreen].scale];
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[specifier setProperty:iconImage forKey:@"iconImage"];
@@ -436,7 +450,24 @@
 
 	[_specifiers enumerateObjectsUsingBlock:^(PSSpecifier* specifier, NSUInteger idx, BOOL *stop)
 	{
-		NSString* firstLetter = [specifier.name substringToIndex:1].uppercaseString;
+		NSString* trimmedName = [specifier.name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		// RTL/LTR characters, WhatsApp has an LTR character in front of it's name
+		trimmedName = [trimmedName stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\u200E\u200F"]];
+
+		NSString* firstLetter = [trimmedName substringToIndex:1].uppercaseString;
+		if(firstLetter.length == 1)
+		{
+			unichar firstLetterChar = [firstLetter characterAtIndex:0];
+			if(firstLetterChar < 'A' || firstLetterChar > 'Z')
+			{
+				firstLetter = @"#";
+			}
+		}
+		else
+		{
+			firstLetter = @"#";
+		}
+
 		NSMutableArray* letterSpecifiers = [_specifiersByLetter objectForKey:firstLetter];
 		if(!letterSpecifiers)
 		{
@@ -451,9 +482,18 @@
 {
 	BOOL firstSpecifier = YES;
 	NSMutableArray* letterGroupedSpecifiers = [NSMutableArray new];
-	for(char c = 'A'; c <= 'Z'; c++)
+	for(char c = 'A'; c <= 'Z'+1; c++)
 	{
-		NSString* cString = [NSString stringWithFormat:@"%c", c];
+		NSString* cString;
+		if(c == ('Z'+1))
+		{
+			// Anything that doesn't start with a letter should be at the bottom
+			cString = @"#";
+		}
+		else
+		{
+			cString = [NSString stringWithFormat:@"%c", c];
+		}
 		NSMutableArray* letterSpecifiers = [_specifiersByLetter objectForKey:cString];
 		if(letterSpecifiers)
 		{

@@ -7,7 +7,7 @@ Unlike AppLists `ALApplicationList` class, AltList does not have a way to get in
 Example uses:
 ```objc
 // get LSApplicationProxy of all installed applications
-NSArray<LSApplicationProxy*>* allInstalledApplications = [[LSApplicationWorkspace defaultWorkspace] allInstalledApplications];
+NSArray<LSApplicationProxy*>* allInstalledApplications = [[LSApplicationWorkspace defaultWorkspace] atl_allInstalledApplications];
 
 // get LSApplicationProxy for one application
 LSApplicationProxy* appProxy = [LSApplicationProxy applicationProxyForIdentifier:@"com.yourapp.yourapp"];

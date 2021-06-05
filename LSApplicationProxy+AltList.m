@@ -18,17 +18,28 @@
 - (BOOL)atl_isHidden
 {
 	NSArray* appTags;
+	NSArray* recordAppTags;
+
+	BOOL launchProhibited = NO;
+
 	if([self respondsToSelector:@selector(correspondingApplicationRecord)])
 	{
 		// On iOS 14, self.appTags is always empty but the application record still has the correct ones
 		LSApplicationRecord* record = [self correspondingApplicationRecord];
-		appTags = record.appTags;
+		recordAppTags = record.appTags;
+		launchProhibited = record.launchProhibited;
 	}
-	else if([self respondsToSelector:@selector(appTags)])
+	if([self respondsToSelector:@selector(appTags)])
 	{
 		appTags = self.appTags;
 	}
-	return [appTags containsObject:@"hidden"] || ([self.atl_bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
+	if(!launchProhibited && [self respondsToSelector:@selector(isLaunchProhibited)])
+	{
+		launchProhibited = self.launchProhibited;
+	}
+
+	BOOL isWebApplication = ([self.atl_bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
+	return [appTags containsObject:@"hidden"] || [recordAppTags containsObject:@"hidden"] || isWebApplication || launchProhibited;
 }
 
 // Getting the display name is slow (up to 2ms) because it uses an IPC call
@@ -101,6 +112,29 @@
 	{
 		return [self applicationIdentifier];
 	}
+}
+
+@end
+
+@implementation LSApplicationWorkspace (AltList)
+
+- (NSArray*)atl_allInstalledApplications
+{
+	if(![self respondsToSelector:@selector(enumerateApplicationsOfType:block:)])
+	{
+		return [self allInstalledApplications];
+	}
+
+	NSMutableArray* installedApplications = [NSMutableArray new];
+	[self enumerateApplicationsOfType:0 block:^(LSApplicationProxy* appProxy)
+	{
+		[installedApplications addObject:appProxy];
+	}];
+	[self enumerateApplicationsOfType:1 block:^(LSApplicationProxy* appProxy)
+	{
+		[installedApplications addObject:appProxy];
+	}];
+	return installedApplications;
 }
 
 @end
