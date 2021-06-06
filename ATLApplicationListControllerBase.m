@@ -454,18 +454,14 @@
 		// RTL/LTR characters, WhatsApp has an LTR character in front of it's name
 		trimmedName = [trimmedName stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\u200E\u200F"]];
 
-		NSString* firstLetter = [trimmedName substringToIndex:1].uppercaseString;
-		if(firstLetter.length == 1)
+		NSString* firstLetter = @"#";
+		if(trimmedName.length > 0)
 		{
-			unichar firstLetterChar = [firstLetter characterAtIndex:0];
-			if(firstLetterChar < 'A' || firstLetterChar > 'Z')
+			unichar firstLetterChar = [trimmedName.uppercaseString characterAtIndex:0];
+			if(firstLetterChar >= 'A' && firstLetterChar <= 'Z')
 			{
-				firstLetter = @"#";
+				firstLetter = [NSString stringWithFormat:@"%c", firstLetterChar];
 			}
-		}
-		else
-		{
-			firstLetter = @"#";
 		}
 
 		NSMutableArray* letterSpecifiers = [_specifiersByLetter objectForKey:firstLetter];
