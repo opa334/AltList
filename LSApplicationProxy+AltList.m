@@ -19,6 +19,7 @@
 {
 	NSArray* appTags;
 	NSArray* recordAppTags;
+	NSArray* sbAppTags;
 
 	BOOL launchProhibited = NO;
 
@@ -38,8 +39,15 @@
 		launchProhibited = self.launchProhibited;
 	}
 
+	NSURL* bundleURL = self.bundleURL;
+	if(bundleURL && [bundleURL checkResourceIsReachableAndReturnError:nil])
+	{
+		NSBundle* bundle = [NSBundle bundleWithURL:bundleURL];
+		sbAppTags = [bundle objectForInfoDictionaryKey:@"SBAppTags"];
+	}
+
 	BOOL isWebApplication = ([self.atl_bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
-	return [appTags containsObject:@"hidden"] || [recordAppTags containsObject:@"hidden"] || isWebApplication || launchProhibited;
+	return [appTags containsObject:@"hidden"] || [recordAppTags containsObject:@"hidden"] || [sbAppTags containsObject:@"hidden"] || isWebApplication || launchProhibited;
 }
 
 // Getting the display name is slow (up to 2ms) because it uses an IPC call
@@ -56,7 +64,7 @@
 
 	NSString* localizedName;
 
-	NSURL* bundleURL = [self valueForKey:@"_bundleURL"];
+	NSURL* bundleURL = self.bundleURL;
 	if(!bundleURL || ![bundleURL checkResourceIsReachableAndReturnError:nil])
 	{
 		localizedName = self.localizedName;
