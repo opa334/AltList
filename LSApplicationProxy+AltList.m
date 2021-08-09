@@ -14,6 +14,30 @@
 	return [self.applicationType isEqualToString:@"User"] && ![self atl_isHidden];
 }
 
+// the tag " hidden " is also valid, so we need to check if any strings contain "hidden" instead
+BOOL tagArrayContainsTag(NSArray* tagArr, NSString* tag)
+{
+	if(!tagArr || !tag) return NO;
+
+	__block BOOL found = NO;
+
+	[tagArr enumerateObjectsUsingBlock:^(NSString* tagToCheck, NSUInteger idx, BOOL* stop)
+	{
+		if(![tagToCheck isKindOfClass:[NSString class]])
+		{
+			return;
+		}
+
+		if([tagToCheck rangeOfString:tag options:0].location != NSNotFound)
+		{
+			found = YES;
+			*stop = YES;
+		}
+	}];
+
+	return found;
+}
+
 // always returns NO on iOS 7
 - (BOOL)atl_isHidden
 {
@@ -47,7 +71,7 @@
 	}
 
 	BOOL isWebApplication = ([self.atl_bundleIdentifier rangeOfString:@"com.apple.webapp" options:NSCaseInsensitiveSearch].location != NSNotFound);
-	return [appTags containsObject:@"hidden"] || [recordAppTags containsObject:@"hidden"] || [sbAppTags containsObject:@"hidden"] || isWebApplication || launchProhibited;
+	return tagArrayContainsTag(appTags, @"hidden") || tagArrayContainsTag(recordAppTags, @"hidden") || tagArrayContainsTag(sbAppTags, @"hidden") || isWebApplication || launchProhibited;
 }
 
 // Getting the display name is slow (up to 2ms) because it uses an IPC call
