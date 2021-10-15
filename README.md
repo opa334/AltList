@@ -78,7 +78,7 @@ ATLApplicationListControllerBase is the base class inherited by the other classe
 | `hideAlphabeticSectionHeaders` | Boolean | false               | When `alphabeticIndexingEnabled` is true, whether to hide the sections that contain the first letters [(Example)](.images/5.PNG?raw=true) |
 | `localizationBundlePath`       | String  | @""                 | Path to the bundle that should be used for localizing custom section titles |
 
-#### Methods (Can be subclassed for customization)
+#### Methods (Can be overwritten by subclasses for customization)
 
 | Method                                                                                     | Purpose      |
 | ------------------------------------------------------------------------------------------ | ------------ |
