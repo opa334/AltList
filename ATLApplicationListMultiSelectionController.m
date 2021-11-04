@@ -26,6 +26,15 @@
 	}
 }
 
+- (void)savePreferences
+{
+	PSSpecifier* specifier = [self specifier];
+	if([specifier atl_hasValidSetter])
+	{
+		[specifier atl_performSetterWithValue:[_selectedApplications allObjects]];
+	}
+}
+
 - (void)prepareForPopulatingSections
 {
 	[super prepareForPopulatingSections];
@@ -45,11 +54,7 @@
 		[_selectedApplications removeObject:applicationID];
 	}
 
-	PSSpecifier* mainSpecifier = [self specifier];
-	if([mainSpecifier atl_hasValidSetter])
-	{
-		[mainSpecifier atl_performSetterWithValue:[_selectedApplications allObjects]];
-	}
+	[self savePreferences];
 }
 
 - (id)readApplicationEnabled:(PSSpecifier*)specifier

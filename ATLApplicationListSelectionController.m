@@ -10,8 +10,6 @@
 
 - (void)loadPreferences
 {
-	[super loadPreferences];
-
 	PSSpecifier* specifier = [self specifier];
 	if([specifier atl_hasValidGetter])
 	{
@@ -24,6 +22,15 @@
 		{
 			_selectedApplicationID = defaultValue;
 		}
+	}
+}
+
+- (void)savePreferences
+{
+	PSSpecifier* specifier = [self specifier];
+	if([specifier atl_hasValidSetter])
+	{
+		[specifier atl_performSetterWithValue:_selectedApplicationID];
 	}
 }
 
@@ -56,11 +63,7 @@
 
 	[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
 
-	PSSpecifier* specifier = [self specifier];
-	if([specifier atl_hasValidSetter])
-	{
-		[specifier atl_performSetterWithValue:_selectedApplicationID];
-	}
+	[self savePreferences];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

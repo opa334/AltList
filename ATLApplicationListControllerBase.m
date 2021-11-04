@@ -235,6 +235,7 @@
 }
 
 - (void)loadPreferences { }
+- (void)savePreferences { }
 
 - (void)prepareForPopulatingSections
 {
