@@ -83,6 +83,7 @@ ATLApplicationListControllerBase is the base class inherited by the other classe
 | Method                                                                                     | Purpose      |
 | ------------------------------------------------------------------------------------------ | ------------ |
 | `- (void)loadPreferences`                                                                  | Load the preference value that the list controller will display |
+| `- (void)savePreferences`                                                                  | Save preferences when they have changed |
 | `- (void)prepareForPopulatingSections`                                                     | Initialize stuff that needs to be done before the populating starts |
 | `- (NSString*)localizedStringForString:(NSString*)string`                                  | Localize string if possible from internal AltList bundle or the localization bundle specified by localizationBundlePath |
 | `- (void)reloadApplications`                                                               | Reload applications and specifiers |
