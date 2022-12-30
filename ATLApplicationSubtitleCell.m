@@ -13,7 +13,17 @@
 	{
 		_customValueLabel = [UILabel new];
 		_customValueLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-		_customValueLabel.textAlignment = NSTextAlignmentRight;
+
+		BOOL isRTL = [UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+		if(isRTL)
+		{
+			_customValueLabel.textAlignment = NSTextAlignmentLeft;
+		}
+		else
+		{
+			_customValueLabel.textAlignment = NSTextAlignmentRight;
+		}
+
 		_customValueLabel.numberOfLines = 1;
 
 		if(@available(iOS 13, *))
@@ -36,19 +46,40 @@
 {
 	[super layoutSubviews];
 
-	CGFloat detailTextRightPos = self.detailTextLabel.frame.origin.x + self.detailTextLabel.bounds.size.width;
-	CGFloat textRightPos = self.textLabel.frame.origin.x + self.textLabel.bounds.size.width;
-	CGFloat x = 0;
-	if(detailTextRightPos > textRightPos)
+	BOOL isRTL = [UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+
+	if(isRTL)
 	{
-		x = detailTextRightPos;
+		CGFloat detailTextLeftPos = self.detailTextLabel.frame.origin.x;
+		CGFloat textLeftPos = self.textLabel.frame.origin.x;
+		CGFloat width = 0;
+		if(detailTextLeftPos < textLeftPos)
+		{
+			width = detailTextLeftPos;
+		}
+		else
+		{
+			width = textLeftPos;
+		}
+
+		_customValueLabel.frame = CGRectMake(0, 0, width, self.contentView.bounds.size.height);
 	}
 	else
 	{
-		x = textRightPos;
+		CGFloat detailTextRightPos = self.detailTextLabel.frame.origin.x + self.detailTextLabel.bounds.size.width;
+		CGFloat textRightPos = self.textLabel.frame.origin.x + self.textLabel.bounds.size.width;
+		CGFloat x = 0;
+		if(detailTextRightPos > textRightPos)
+		{
+			x = detailTextRightPos;
+		}
+		else
+		{
+			x = textRightPos;
+		}
+		CGFloat width = self.contentView.bounds.size.width - x;
+		_customValueLabel.frame = CGRectMake(x, 0, width, self.contentView.bounds.size.height);
 	}
-	CGFloat width = self.contentView.bounds.size.width - x;
-	_customValueLabel.frame = CGRectMake(x, 0, width, self.contentView.bounds.size.height);
 }
 
 - (void)refreshCellContentsWithSpecifier:(PSSpecifier*)specifier
