@@ -12,7 +12,7 @@ AltList_FRAMEWORKS = MobileCoreServices
 AltList_PRIVATE_FRAMEWORKS = Preferences
 
 after-AltList-stage::
-	@ln -s /Library/Frameworks/AltList.framework $(THEOS_STAGING_DIR)/Library/PreferenceBundles/AltList.bundle
+	@ln -s $(THEOS_PACKAGE_INSTALL_PREFIX)/Library/Frameworks/AltList.framework $(THEOS_STAGING_DIR)/Library/PreferenceBundles/AltList.bundle
 
 include $(THEOS_MAKE_PATH)/framework.mk
 ifeq ($(PACKAGE_BUILDNAME),debug)
