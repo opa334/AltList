@@ -8,6 +8,7 @@ AltList_FILES = AltList.x $(wildcard *.m)
 AltList_PUBLIC_HEADERS = ATLApplicationListControllerBase.h ATLApplicationListMultiSelectionController.h ATLApplicationListSelectionController.h ATLApplicationListSubcontroller.h ATLApplicationListSubcontrollerController.h ATLApplicationSection.h ATLApplicationSelectionCell.h ATLApplicationSubtitleCell.h ATLApplicationSubtitleSwitchCell.h LSApplicationProxy+AltList.h
 AltList_INSTALL_PATH = /Library/Frameworks
 AltList_CFLAGS = -fobjc-arc -Wno-tautological-pointer-compare
+AltList_LDFLAGS = -install_name @rpath/AltList.framework/AltList
 AltList_FRAMEWORKS = MobileCoreServices
 AltList_PRIVATE_FRAMEWORKS = Preferences
 
