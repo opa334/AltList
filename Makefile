@@ -3,13 +3,14 @@ TARGET := iphone:clang:16.2:15.0
 else
 TARGET := iphone:clang:14.5:7.0
 endif
+INSTALL_TARGET_PROCESSES := Preferences
 
 include $(THEOS)/makefiles/common.mk
 
 FRAMEWORK_NAME = AltList
 
 AltList_FILES = AltList.x $(wildcard *.m)
-AltList_PUBLIC_HEADERS = ATLApplicationListControllerBase.h ATLApplicationListMultiSelectionController.h ATLApplicationListSelectionController.h ATLApplicationListSubcontroller.h ATLApplicationListSubcontrollerController.h ATLApplicationSection.h ATLApplicationSelectionCell.h ATLApplicationSubtitleCell.h ATLApplicationSubtitleSwitchCell.h LSApplicationProxy+AltList.h
+AltList_PUBLIC_HEADERS = ATLApplicationListControllerBase.h ATLApplicationListMultiSelectionController.h ATLApplicationListSelectionController.h ATLApplicationListSubcontroller.h ATLApplicationListSubcontrollerController.h ATLApplicationSection.h ATLApplicationCell.h ATLApplicationSelectionCell.h ATLApplicationSubtitleCell.h ATLApplicationSwitchCell.h ATLApplicationSubtitleSwitchCell.h LSApplicationProxy+AltList.h
 AltList_INSTALL_PATH = /Library/Frameworks
 AltList_CFLAGS = -fobjc-arc -Wno-tautological-pointer-compare
 ifeq ($(THEOS_PACKAGE_SCHEME),rootless)
@@ -19,6 +20,7 @@ AltList_FRAMEWORKS = MobileCoreServices
 AltList_PRIVATE_FRAMEWORKS = Preferences
 
 after-AltList-stage::
+	@mkdir -p $(THEOS_STAGING_DIR)/Library/PreferenceBundles
 	@ln -s $(THEOS_PACKAGE_INSTALL_PREFIX)/Library/Frameworks/AltList.framework $(THEOS_STAGING_DIR)/Library/PreferenceBundles/AltList.bundle
 
 include $(THEOS_MAKE_PATH)/framework.mk
