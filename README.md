@@ -72,7 +72,8 @@ ATLApplicationListControllerBase is the base class inherited by the other classe
 | `sections`                     | Array   | One Visible section | Array of dictionaries that represent the sections in which the applications are shown |
 | `useSearchBar`                 | Boolean | false               | Whether there should be a search bar at the top that allows to search for applications [(Example)](.images/1.PNG?raw=true) |
 | `hideSearchBarWhileScrolling`  | Boolean | false               | When `useSearchBar` is enabled, whether the search bar should be hidden while scrolling (Always true on iOS 10 and below) [(Example)](.images/2.PNG?raw=true) |
-| `includeIdentifiersInSearch`   | Boolean | false               | When `useSearchBar` is enabled, whether it should be possible to search for apps by their identifier. When this is false, it is only possible to search for apps by their name.
+| `includeIdentifiersInSearch`   | Boolean | false               | When `useSearchBar` is enabled, whether it should be possible to search for apps by their identifier. When this is false, it is only possible to search for apps by their name. |
+| `highlightSearchText`          | Boolean | false               | When `useSearchBar` is enabled, whether the search text should be highlighted in the application names or identifiers. |
 | `showIdentifiersAsSubtitle`    | Boolean | false               | Whether the application identifiers should be shown in the subtitle [(Example)](.images/3.PNG?raw=true) |
 | `alphabeticIndexingEnabled`    | Boolean | false               | When there is only one section, whether to section and index it by the starting letters [(Example)](.images/4.PNG?raw=true) |
 | `hideAlphabeticSectionHeaders` | Boolean | false               | When `alphabeticIndexingEnabled` is true, whether to hide the sections that contain the first letters [(Example)](.images/5.PNG?raw=true) |

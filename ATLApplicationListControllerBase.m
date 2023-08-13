@@ -66,6 +66,12 @@
 		{
 			self.includeIdentifiersInSearch = [includeIdentifiersInSearchNum boolValue];
 		}
+
+		NSNumber* highlightSearchText = [specifier propertyForKey:@"highlightSearchText"];
+		if(highlightSearchText)
+		{
+			self.highlightSearchText = [highlightSearchText boolValue];
+		}
 	}
 
 	[self _setUpSearchBar];
@@ -622,10 +628,10 @@
 					}
 				}
 
-				[specifier setUserInfo:@{
+				[specifier setUserInfo:(self.highlightSearchText ? @{
 					@"searchKey": _searchKey ?: @"",
 					@"includeIdentifiersInSearch": @(self.includeIdentifiersInSearch),
-				}];
+				} : nil)];
 				[_specifiers insertObject:specifier atIndex:0];
 			}];
 		}
