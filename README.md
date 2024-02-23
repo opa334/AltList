@@ -103,7 +103,7 @@ ATLApplicationListControllerBase is the base class inherited by the other classe
 
 ATLApplicationListSelectionController can be used as the detail class of a PSLinkListCell to have a list of applications of which one can be selected.
 The selected applications bundle identifier will be saved in the preference domain specified via `defaults` under the specified `key`.
-It respects the `get` / `set` attributes so by default it will use the `readPreferenceValue` and `setPreferenceValue:specifier:` methods of the PSListController that contains the cell for reading / writing the value.
+It respects the `get` / `set` attributes so by default it will use the `readPreferenceValue:` and `setPreferenceValue:specifier:` methods of the PSListController that contains the cell for reading / writing the value.
 Setting the cellClass to `ATLApplicationSelectionCell` is recommended so the value preview shows the application name instead of the application bundle identifier.
 
 #### Example
@@ -144,7 +144,7 @@ Setting the cellClass to `ATLApplicationSelectionCell` is recommended so the val
 ATLApplicationListSelectionController can be used as the detail class of a PSLinkListCell to have a list of applications where each has a switch next to it.
 The key `defaultApplicationSwitchValue` can be set to a boolean and will be used as the default value of the application switches.
 An array with the application identifiers of the enabled (or disabled when `defaultApplicationSwitchValue` is true) applications will be saved in the preference domain specified via `defaults` under the specified `key`.
-It respects the `get` / `set` attributes so by default it will use the `readPreferenceValue` and `setPreferenceValue:specifier:` methods of the PSListController that contains the cell for reading / writing the value.
+It respects the `get` / `set` attributes so by default it will use the `readPreferenceValue:` and `setPreferenceValue:specifier:` methods of the PSListController that contains the cell for reading / writing the value.
 
 #### Keys
 
