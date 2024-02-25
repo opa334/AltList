@@ -2,6 +2,7 @@
 #import "ATLApplicationSubtitleCell.h"
 
 #import "ATLApplicationListControllerBase.h"
+#import "PSTableCell+AltList.h"
 
 @implementation ATLApplicationSubtitleCell
 
@@ -90,6 +91,7 @@
 	{
 		self.detailTextLabel.text = [(ATLApplicationListControllerBase*)target _subtitleForSpecifier:specifier];
 	}
+	[self addSearchHighlights];
 }
 
 - (void)setValue:(id)value

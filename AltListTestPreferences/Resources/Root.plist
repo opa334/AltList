@@ -78,6 +78,45 @@
 			<key>defaults</key>
 			<string>com.opa334.altlisttestpreferences</string>
 			<key>label</key>
+			<string>Test 2.1</string>
+			<key>detail</key>
+			<string>ATLApplicationListSelectionController</string>
+			<key>key</key>
+			<string>selectedApplicationFromTest2</string>
+			<key>cellClass</key>
+			<string>ATLApplicationSelectionCell</string>
+			<key>sections</key>
+			<array>
+				<dict>
+					<key>sectionType</key>
+					<string>System</string>
+				</dict>
+				<dict>
+					<key>sectionType</key>
+					<string>User</string>
+				</dict>
+				<dict>
+					<key>sectionType</key>
+					<string>Hidden</string>
+				</dict>
+			</array>
+			<key>useSearchBar</key>
+			<true/>
+			<key>hideSearchBarWhileScrolling</key>
+			<true/>
+			<key>showIdentifiersAsSubtitle</key>
+			<true/>
+			<key>includeIdentifiersInSearch</key>
+			<true/>
+			<key>highlightSearchText</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.altlisttestpreferences</string>
+			<key>label</key>
 			<string>Test 3</string>
 			<key>detail</key>
 			<string>ATLApplicationListMultiSelectionController</string>
