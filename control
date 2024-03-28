@@ -1,7 +1,7 @@
 Package: com.opa334.altlist
 Name: AltList
 Depiction: https://moreinfo.thebigboss.org/moreinfo/depiction.php?file=altlistDp
-Version: 1.0.10
+Version: 1.0.11
 Architecture: iphoneos-arm
 Depends: firmware (>=7.0)
 Description: A modern AppList alternative
