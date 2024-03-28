@@ -1,6 +1,15 @@
 #import <Foundation/Foundation.h>
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
+#import <mach-o/dyld.h>
+
+NSString *safe_getExecutablePath(void)
+{
+	char executablePathC[PATH_MAX];
+	uint32_t executablePathCSize = sizeof(executablePathC);
+	_NSGetExecutablePath(&executablePathC[0], &executablePathCSize);
+	return [NSString stringWithUTF8String:executablePathC];
+}
 
 //Pre heat display names
 %ctor

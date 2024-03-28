@@ -2,6 +2,8 @@
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
 
+extern NSString *safe_getExecutablePath(void);
+
 @implementation LSApplicationProxy (AltList)
 
 - (BOOL)atl_isSystemApplication
@@ -155,6 +157,13 @@ BOOL tagArrayContainsTag(NSArray* tagArr, NSString* tag)
 
 - (NSArray*)atl_allInstalledApplications
 {
+	NSString *selfExecutable = safe_getExecutablePath();
+	if ([selfExecutable isEqualToString:@"/usr/libexec/lsd"]) {
+		// Prevent this from ever getting called inside lsd itself
+		// Otherwise it could cause a crash
+		return nil;
+	}
+
 	if(![self respondsToSelector:@selector(enumerateApplicationsOfType:block:)])
 	{
 		return [self allInstalledApplications];
