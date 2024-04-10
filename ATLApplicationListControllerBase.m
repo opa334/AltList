@@ -2,8 +2,12 @@
 #import "ATLApplicationListControllerBase.h"
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
+#import "ATLApplicationCell.h"
+#import "ATLApplicationSwitchCell.h"
 #import "ATLApplicationSubtitleSwitchCell.h"
 #import "ATLApplicationSubtitleCell.h"
+
+#import "PSSpecifier+AltList.h"
 
 @interface UIImage (Private)
 + (instancetype)_applicationIconImageForBundleIdentifier:(NSString*)bundleIdentifier format:(int)format scale:(CGFloat)scale;
@@ -61,6 +65,12 @@
 		if(includeIdentifiersInSearchNum)
 		{
 			self.includeIdentifiersInSearch = [includeIdentifiersInSearchNum boolValue];
+		}
+
+		NSNumber* highlightSearchText = [specifier propertyForKey:@"highlightSearchText"];
+		if(highlightSearchText)
+		{
+			self.highlightSearchText = [highlightSearchText boolValue];
 		}
 	}
 
@@ -307,7 +317,14 @@
 		}
 	}
 
-	return nil;
+	if(cellType == PSSwitchCell)
+	{
+		return [ATLApplicationSwitchCell class];
+	}
+	else
+	{
+		return [ATLApplicationCell class];
+	}
 }
 
 - (Class)detailControllerClassForSpecifierOfApplicationProxy:(LSApplicationProxy*)applicationProxy
@@ -579,6 +596,10 @@
 		if(![self shouldHideApplicationSpecifiers])
 		{
 			_specifiers = _allSpecifiers;
+			[_allSpecifiers enumerateObjectsUsingBlock:^(PSSpecifier* specifier, NSUInteger idx, BOOL *stop)
+			{
+				[specifier setUserInfo:nil];
+			}];
 		}
 		else
 		{
@@ -607,6 +628,10 @@
 					}
 				}
 
+				[specifier setUserInfo:(self.highlightSearchText ? @{
+					@"searchKey": _searchKey ?: @"",
+					@"includeIdentifiersInSearch": @(self.includeIdentifiersInSearch),
+				} : nil)];
 				[_specifiers insertObject:specifier atIndex:0];
 			}];
 		}

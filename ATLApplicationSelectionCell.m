@@ -3,6 +3,8 @@
 #import "CoreServices.h"
 #import "LSApplicationProxy+AltList.h"
 
+#import "PSTableCell+AltList.h"
+
 @interface PSTableCell()
 - (void)setValue:(id)value;
 @end
@@ -23,6 +25,12 @@
 	}
 
 	[super setValue:value];
+}
+
+- (void)refreshCellContentsWithSpecifier:(PSSpecifier*)specifier
+{
+	[super refreshCellContentsWithSpecifier:specifier];
+	[self addSearchHighlights];
 }
 
 @end
